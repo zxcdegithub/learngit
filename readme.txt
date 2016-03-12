@@ -5,3 +5,7 @@ Git tracks changes of files.
 Createing a new branch is quick and simple.
 Add merge.
 dev word done.
+#need your help to continue....
+need your help to continue2...
+Other: i've done.
+
