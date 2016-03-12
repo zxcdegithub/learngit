@@ -1,0 +1,181 @@
+http://linfengdu.blog.163.com/blog/static/11771073201362551915534/
+1、做android开发的过程，碰到了Linux下adb识别不了android设备的问题，刚开始在网上google下，发现都是针对ubuntu下的一些说明：如google提供的方法：http://developer.android.com/tools/device.html，但发现通过做这些还是有些android设备连接不上，于是通过阅读adb源码，得出了一些方法，和大家一起共勉下：
+ 
+a、google提到的修改/etc/udev/rules.d/51-android.rules的方法：
+DE>SUBSYSTEM=="usb", ATTR{idVendor}=="0bb4", MODE="0666", GROUP="plugdev"DE>
+其实这样做的目的无非是为了使adb对创建的usb节点有访问权限，其实只要使用root来启动adb server就不存在此问题。做法如下：在root终端上运行adb start-server ，如果已经有运行adb命令的则需要杀掉adb server，运行 ps aux | grep adb ，找到adb server的pid，然后kill掉，如我机器上：
+root       2795  0.0      0.0         30556      1244          pts/2              sl          09:00  0:03           adb fork-server server
+执行kill 2795杀掉adb server。
+ 
+b、通过以上办法还是无法识别android设备的，则可能你的android的VID未能加入adb中，你需要手动添加。
+添加的文件位置与你第一次启动adb server有关，如你在root上启动adb server，则其位置在
+/root/.android/adb_usb.ini，否则其位置在$HOME/.android/adb_usb.ini下，如果$HOME为空，则在/tmp/.android/adb_usb.ini下。未有文件或目录的请手动添加。以下是一份adb_usb.ini的示例：
+#for OKWAP C900
+0x14b4
+#for K-Touch W606
+0x0525
+#for lenovo speic
+0x2006
+其中#开头表注释，其它则表示android的VID，每个VID需要单独一行。
+获取VID的方法：插上设备前运行lsusb，插上设备后，再次运行lsusb，多出的那个就是你的设备，而VID就在其中如：
+Bus 001 Device 034: ID 2006:5010
+其中的2006即为其VID。
+在adb_usb.ini中添加好后，杀掉adb server，然后启动adb server，（参考a中提到的方法）。
+ 
+c、如果按以上执行完以上两步还不行，那就碰到了令人头痛的问题了。
+现在有些usb设备叫做“免CD”设备。具体点来说，目前一些新的USB 设备在内部含有windows驱动，当你第一次插入的时候，它作为一个闪存，并提示你安装驱动。在安装驱动之后，驱动会自动切换USB设备的模式，存储设备将会消失（大多数情况），新的设备将会产生（如USB类型的Modem）。这种特征被无线设备的制造商称其为“免CD”的设备。在Linux下是通过usb_modeswitch这个工具自动切换的。你读到这里说明你的设备肯定不在usb_modeswitch支持的列表中。此时你要么等其支持，要么就是自己动手支持了。
+要自己手动支持，这是个复杂的过程，你可以参考：http://www.draisberghof.de/usb_modeswitch/
+简单的来讲，如果你要自己支持，也就是要抓取Windows下驱动做了哪些事情，让其进行了模式切换。然后你在/etc/usb_modeswitch.d/目录下参照已有的文件，创建自己的配置文件如：2006:5010，在其中添加你抓取到得信息。
+备注：windows下没过多研究，一般装上驱动，识别到了adb接口就可以识别到。平板上和Linux下比较类似，不过其$HOME为空，所以添加的目录在/tmp/.android/adb_usb.ini里。
+ 
+ 
+=========================
+Ubuntu下实机调试Android程序
+
+入手华为C8500一台，连到我的Ubuntu上，打算实机调试下程序。
+结果ADB不能识别该设备，于是展开一番调查并将结果奉上。
+设备不被识别
+
+
+调查并解决之
+
+方法一：
+停止当前ADB服务
+    adb kill-server
+以root权限重新开启ADB服务
+    sudo adb start-server
+这方法是个野路子，官方方法请看下面;-)
+方法二：
+创建下面文件
+    /etc/udev/rules.d/51-android.rules
+在该文件中加入下记内容
+    # HUAWEI
+    SUBSYSTEM=="usb", SYSFS{idVendor}=="12d1", MODE="0666"
+这个方法的依据是Android的官方文档，推荐使用。
+需要注意的是上面红色字体的部分需要根据设备的厂家而改变。具体也可参考Android的官方文档。
+现在来看一下效果
+
+
+解决设备名乱码：
+
+在adb shell中输入如下命令：
+    echo 22>/sys/devices/platform/msm_hsusb_periphera/fixusb
+注：adb shell有时会提示目录不存在，这时用R.E.管理器去修改也可以:-)
+原来的「Android Mobile Adapter」变成了明确的「hw-smart-phone」，至此打完收工^_^
+
+ ----------------------------------------------------------------------------------------
+首先确认手机连接上电脑，lsusb查看下设备记录。
+
+root@asfman:/home/asfman# lsusb
+Bus 008 Device 001: ID 1d6b:0001 Linux Foundation 1.1 root hub
+Bus 007 Device 001: ID 1d6b:0001 Linux Foundation 1.1 root hub
+Bus 006 Device 001: ID 1d6b:0001 Linux Foundation 1.1 root hub
+Bus 005 Device 001: ID 1d6b:0001 Linux Foundation 1.1 root hub
+Bus 004 Device 002: ID 04d9:1603 Holtek Semiconductor, Inc. 
+Bus 004 Device 001: ID 1d6b:0001 Linux Foundation 1.1 root hub
+Bus 003 Device 002: ID 046d:c051 Logitech, Inc. G3 (MX518) Optical Mouse
+Bus 003 Device 001: ID 1d6b:0001 Linux Foundation 1.1 root hub
+Bus 002 Device 011: ID 12d1:1035 Huawei Technologies Co., Ltd. 
+Bus 002 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+
+我这里是:
+
+Bus 007 Device 009: ID 18d1:4e12
+然后在/etc/udev/rules.d/下创建一个配置文件: 51-android.rules
+
+sudo vim /etc/udev/rules.d/50-android.rules
+文件里添加如下配置参数:
+
+SUBSYSTEM=="usb", SYSFS{"Huawei Technologies Co., Ltd."}=="12d1", MODE="0666"
+保存，给配置文件设置下权限
+
+sudo chmod a+rx /etc/udev/rules.d/51-android.rules
+Restart
+
+sudo /etc/init.d/udev restart
+最后再重启下adb服务，就可以了(没配置环境变量的请进入Android SDK tools目录执行sudo ./adb kill-server ./adb devices)
+
+sudo adb kill-server
+sudo adb devices
+补充
+SYSFS参数:
+
+SYSFS{"idVendor"}="xxx"
+针对Linux ADB驱动配置文件里的SYSFS参数是指设备厂商。当初因为是HTC帮Google做的手机，所以官网一开始的用例上写的是”High Tech Computer Corp.”。但现在Moto, 索爱, 三星等一批手机厂商的加入，Android生产厂商已不只HTC一家。而且且如果设备型号不是0bb4那该怎么办呢？
+
+读sdk帮助文档的时候，发现sdk已经提供了说明:
+(详见：docs/guide/developing/device.html)
+
+If you’re developing on Ubuntu Linux, you need to add a rules file that contains a USB configuration for each type of device you want to use for development. Each device manufacturer uses a different vendor ID. The example rules files below show how to add an entry for a single vendor ID (the HTC vendor ID). In order to support more devices, you will need additional lines of the same format that provide a different value for the SYSFS{idVendor} property. For other IDs, see the table of USB Vendor IDs, below.
+
+1. Log in as root and create this file: /etc/udev/rules.d/51-android.rules.
+
+For Gusty/Hardy, edit the file to read: [注：ubuntu 7.10及以后版本]
+SUBSYSTEM==”usb”, SYSFS{idVendor}==”0bb4″, MODE=”0666″
+
+For Dapper, edit the file to read: [注：ubuntu 6.06及以前版本]
+SUBSYSTEM==”usb_device”, SYSFS{idVendor}==”0bb4″, MODE=”0666″
+2. Now execute:
+chmod a+r /etc/udev/rules.d/51-android.rules
+
+只要按照说明把创建的51-android.rules文件中的0bb4修改为相应的USB供应商ID信息即可。
+比如我的手机是motorola,idVender是22b8
+那么这一行就是
+
+SUBSYSTEM=="usb", SYSFS{idVendor}=="22b8", MODE="0666"
+不过，你可以写多行，以使用各种设备。比如我就写了所有的，如下：
+
+#Acer      0502
+SUBSYSTEM=="usb", SYSFS{idVendor}=="0502", MODE="0666"
+#Dell     413c
+SUBSYSTEM=="usb", SYSFS{idVendor}=="413c", MODE="0666"
+#Foxconn     0489
+SUBSYSTEM=="usb", SYSFS{idVendor}=="0489", MODE="0666"
+#Garmin-Asus     091E
+SUBSYSTEM=="usb", SYSFS{idVendor}=="091e", MODE="0666"
+#HTC     0bb4
+SUBSYSTEM=="usb", SYSFS{idVendor}=="0bb4", MODE="0666"
+#Huawei     12d1
+SUBSYSTEM=="usb", SYSFS{idVendor}=="12d1", MODE="0666"
+#Kyocera     0482
+SUBSYSTEM=="usb", SYSFS{idVendor}=="0482", MODE="0666"
+#LG     1004
+SUBSYSTEM=="usb", SYSFS{idVendor}=="1004", MODE="0666"
+#Motorola     22b8
+SUBSYSTEM=="usb", SYSFS{idVendor}=="22b8", MODE="0666"
+#Nvidia     0955
+SUBSYSTEM=="usb", SYSFS{idVendor}=="0955", MODE="0666"
+#Pantech     10A9
+SUBSYSTEM=="usb", SYSFS{idVendor}=="10A9", MODE="0666"
+#Samsung     04e8
+SUBSYSTEM=="usb", SYSFS{idVendor}=="04e8", MODE="0666"
+#Sharp     04dd
+SUBSYSTEM=="usb", SYSFS{idVendor}=="04dd", MODE="0666"
+#Sony Ericsson     0fce
+SUBSYSTEM=="usb", SYSFS{idVendor}=="0fce", MODE="0666"
+#ZTE     19D2
+SUBSYSTEM=="usb", SYSFS{idVendor}=="19D2", MODE="0666"
+但是这上面的ID，并不能包括所有，我手上就有一台设备的USB ID就不在上述之列。
+解决办法是你可以使用lsusb命令查看你的USB ID
+
+root@asfman:/home/asfman# lsusb
+Bus 008 Device 001: ID 1d6b:0001 Linux Foundation 1.1 root hub
+Bus 007 Device 001: ID 1d6b:0001 Linux Foundation 1.1 root hub
+Bus 006 Device 001: ID 1d6b:0001 Linux Foundation 1.1 root hub
+Bus 005 Device 001: ID 1d6b:0001 Linux Foundation 1.1 root hub
+Bus 004 Device 002: ID 04d9:1603 Holtek Semiconductor, Inc. 
+Bus 004 Device 001: ID 1d6b:0001 Linux Foundation 1.1 root hub
+Bus 003 Device 002: ID 046d:c051 Logitech, Inc. G3 (MX518) Optical Mouse
+Bus 003 Device 001: ID 1d6b:0001 Linux Foundation 1.1 root hub
+Bus 002 Device 011: ID 12d1:1035 Huawei Technologies Co., Ltd. 
+Bus 002 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+
+找到上面的ID为12d1,在文件中添加设备就可以了。
+
+SUBSYSTEM=="usb", SYSFS{idVendor}=="12d1", MODE="0666"
+修改/etc/udev/rules.d/51-android.rules不需要重启Linux机器，重新插拔一下设备就可以了。再次运行adb devices就可以看到你的设备已经连接
+
+root@asfman: adb devices
+hw-smart-phone  device
