@@ -6,4 +6,4 @@ Createing a new branch is quick and simple.
 Add merge.
 dev word done.
 #need your help to continue....
-other: i've done.
+Other: i've done.
