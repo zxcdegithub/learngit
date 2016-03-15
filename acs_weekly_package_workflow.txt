@@ -1,0 +1,15 @@
+1.download code
+ repo init -u ssh://android.intel.com/manifest -b platform/android/main -m acs-main
+ repo sync -j8
+ repo start PRC_branch --all
+
+
+2.code path:
+  ./acs_test_suites/OTC/TC/TP/
+
+3. test xml path:
+  ./acs_test_suites/OTC/CAMPAIGN/SystemFunctional/M/MR_0/TP/
+
+4. run xml file:
+  export ACS_EXECUTION_CONFIG_PATH=~/acs0114/acs_test_suites/
+  python acs/src/ACS.py -b OTC/BENCHCFG/myBench_usb.xml -d ECS-Android-LLP -c OTC/CAMPAIGN/SystemFunctional/M/MR_0/TP/Multimedia_Camera.ECS_re.xml --dev --user=mingminx.liu@intel.com --awr_server=acs.tl.intel.com
