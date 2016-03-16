@@ -1,0 +1,13 @@
+只留下一个设备
+
+adb shell
+
+ echo 123321234 >/sys/class/android_usb/android0/iSerial
+
+exit 推出shell模式
+
+adb kill-server
+
+adb start-server
+
+adb devices
