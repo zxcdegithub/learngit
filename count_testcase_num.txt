@@ -1,0 +1,2 @@
+input :%s/TestCase(keyword)/&/g
+testcase num = count -2 
