@@ -6,7 +6,8 @@
 1.5Get Testplans
  a. cd $code_base/acs_test_suites/OTC/TC/TP/support/plangenerator
  b. python campaigngen_hpalm.py --project OTC_Android_Testing --domain SSG --user bozhoux --password 3edc\#EDC -d ~/Desktop/Pyunit/Functional/ --filterfile hpalm_M.ini
- c. cp campaign and tcs to source code tree
+ c. cp CAMPAIGN to ./acs_test_suites/OTC/CAMPAIGN/SystemFunctional/M/MR_0/TP/
+ d. cp  TC to ./acs_test_suites/OTC/TC/TP/TC
 
 2.code path:
   ./acs_test_suites/OTC/TC/TP/
@@ -18,6 +19,12 @@
 
 3.5 set export
 export ACS_EXECUTION_CONFIG_PATH=~/acs0114/acs_test_suites/
+
+(Camera!!--3.8 for porting ,edit config file:tests.testplan.camera.conf
+   path:./acs_test_suites/OTC/TC/TP/testplan/Multimedia_Camera/tests.testplan.camera.conf
+   1. add platform "aosp=SOFIA3GR_OARS7A;CHT_T4;CHT_T3;SOFIA_3GR_ECS_TH8"
+   2. add config string "sofia_3gr_ecs_th8=th8" in new line.
+)
 
 4. run xml file:
   
