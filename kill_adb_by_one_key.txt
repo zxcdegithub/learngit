@@ -1,6 +1,6 @@
 
 
-    ps -ef|grep ./amplxe-gui|grep -v grep|cut -c 9-15|xargs kill -9
+    ps -ef|grep adb|grep -v grep|cut -c 9-15|xargs kill -9
 
     批量杀死包含关键字“./amplxe”的进程。
 
