@@ -1,0 +1,16 @@
+
+
+    ps -ef|grep ./amplxe-gui|grep -v grep|cut -c 9-15|xargs kill -9
+
+    批量杀死包含关键字“./amplxe”的进程。
+
+    "ps -ef" ——查看所有进程
+
+    "grep ./amplxe-gui" ——列出所有含有关键字"./amplxe-gui"的进程
+
+    "grep -v grep" ——在列出的进程中去除含有关键字"grep"的进程（因为我们在前一步生成的grep进程也包含关键字）
+
+    "cut -c 9-15" ——截取输入行的第9个字符到第15个字符，而这正好是进程号PID
+
+    "xargs kill -9" ——xargs 命令是用来把前面命令的输出结果（PID）作为"kill -9"命令的参数，并执行该命令。"kill -9"会强行杀掉指定进程。
+
