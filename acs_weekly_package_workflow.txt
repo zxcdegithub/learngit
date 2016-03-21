@@ -25,6 +25,7 @@ export ACS_EXECUTION_CONFIG_PATH=~/acs0114/acs_test_suites/
    1. add platform "aosp=SOFIA3GR_OARS7A;CHT_T4;CHT_T3;SOFIA_3GR_ECS_TH8"
    2. add config string "sofia_3gr_ecs_th8=th8" in new line.
 )
+3.6 Check memory card is avaliable.
 
 4. run xml file:
   
