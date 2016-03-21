@@ -26,6 +26,7 @@ Release Test
 	a. Download and flash img
 	b. Export RECIPE_DEVICE_TYPE for platforms
         b.5. Check Memory card is available.
+        b.6 check wifi is avaliable.
 	c. Start weekly release test
 		*All step executed complete
 		*No critical issues occurred
@@ -60,6 +61,7 @@ Release Test
 	b. Export ACS_EXECUTION_CONFIG_PATH for platforms
 		export ACS_EXECUTION_CONFIG_PATH=/home/bob/acs_dev/acs_test_suites/
         b.5. Check memory card is avaliable.
+        b.6 Check wifi is avaliable.
 	c. Run pretest
 		*Confirm pretest all passed
 	d. Start weekly release test

@@ -26,6 +26,7 @@ export ACS_EXECUTION_CONFIG_PATH=~/acs0114/acs_test_suites/
    2. add config string "sofia_3gr_ecs_th8=th8" in new line.
 )
 3.6 Check memory card is avaliable.
+3.7 Check Wifi is avaliable.
 
 4. run xml file:
   
