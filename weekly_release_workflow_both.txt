@@ -62,6 +62,7 @@ Release Test
 		export ACS_EXECUTION_CONFIG_PATH=/home/bob/acs_dev/acs_test_suites/
         b.5. Check memory card is avaliable.
         b.6 Check wifi is avaliable.
+        b.7 kill adb server by cmd and adb devices.
 	c. Run pretest
 		*Confirm pretest all passed
 	d. Start weekly release test
