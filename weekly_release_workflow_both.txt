@@ -24,6 +24,7 @@ Weekly release
 Release Test
 1. Weekly release test
 	a. Download and flash img
+        a.5 tar zxf two tar.gz.
 	b. Export RECIPE_DEVICE_TYPE for platforms
         b.5. Check Memory card is available.
         b.6 check wifi is avaliable.
