@@ -27,6 +27,7 @@ Release Test
 	b. Export RECIPE_DEVICE_TYPE for platforms
         b.5. Check Memory card is available.
         b.6 check wifi is avaliable.
+        b.7 Execute script/main.py in out folder.
 	c. Start weekly release test
 		*All step executed complete
 		*No critical issues occurred
