@@ -1,0 +1,18 @@
+DownloadTool:(SOFIA 3GR,LTE-A,-B)
+1. confirm latest image.
+2. download latest image.
+3. tar zip package.
+3. shutdown phone
+4. run cmd - 
+   ./DownloadTool -c1 --erase-mode 2 --library libDownloadTool.so xxx/*.fls
+   ./DownloadTool -c1 --erase-mode 3 --library libDownloadTool.so xxx/*.fls 
+5. plugin usb to phone.
+6. check settingS version.
+
+PlatformFlashTool(T3,T4):
+1. confirm latest image.
+2. download latest image.
+3. make sure phone online.
+4. select erase PVT or EVT
+5. click start flash.
+6. check settings version.
