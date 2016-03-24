@@ -1,0 +1,22 @@
+scp -r 2016.03.24_08.48.09* bob@bob-pc.sh.intel.com:~/Templates/Weekly_release/ww13/
+
+scp -r * bob@bob-pc.sh.intel.com:~/Templates/Weekly_release/ww13/
+
+1.
+per different platform’s plan, for test plan you can refer to csv files.
+run cts --plan CTS-ECS7B
+run cts --plan CTS-ECS8A
+run cts --plan CTS-ECS210A
+run cts --plan CTS-ECS7
+run cts --plan CTS-MALATA8_LOW
+run cts --plan CTS-MALATA10
+run cts --plan CTS-Sofia3GR_MRD6S
+run cts --plan CTS-SOFIA3GR_OARS7A
+run cts --plan CTS-SOFIALTE_MRD6SLA
+run cts --plan CTS-SOFIALTE_MRD6SLB
+run cts --plan CTS-CHT_T4
+run cts --plan CTS-CHT_T3
+这部分
+最后应该加个Broxton的testplan
+
+2.git push origin master
