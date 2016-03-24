@@ -19,4 +19,4 @@ run cts --plan CTS-CHT_T3
 这部分
 最后应该加个Broxton的testplan
 
-2.git push origin master
+2.two files to git push origin master
