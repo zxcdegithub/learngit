@@ -1,0 +1,240 @@
+ACS + Pyunit User
+
+One time host setup
+1. Proxy
+    a. /etc/environment
+        $vim /etc/environment --> add http_proxy/https_proxy/ftp_proxy ...
+        $sudo visudo --> add env_keep+="http_proxy https_proxy ftp_proxy"
+    b. /etc/apt/apt.conf --> Update
+    c. Edit sources.list
+        #Invalid the http://jenkins-sys.sh.intel.com/releases/latest/Ubuntu1404 
+        $sudo apt-get update
+2. Install SDK:
+    a. Download SDK and unzip https://developer.android.com/sdk/installing/index.html?pkg=tools
+    b. Replace adb/fastboot
+    c. Add to PATH:
+        $sudo vim /etc/profile
+        ``` export ANDROID_HOME=/usr/local/sdk
+            export PATH=$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools
+        ```
+    d. 51 rules /etc/udev/rules.d
+    e. Add super user for adb
+        $sudo chmod a+s /usr/bin/adb
+        
+
+Install ACS and Pyunit:
+1. Download release packages: http://androidrobot05.sh.intel.com/acs/
+    $wget http://androidrobot05.sh.intel.com/acs/ACS_15.26.4_v1.zip
+    $unzip ACS_15.26.4_v1.zip
+2. Install ACS environment.(Setup for only once.)
+    $cd acs/src/_Tools/setup_manager/setups
+    $sudo python setup_mgr.py install devel
+3. Remove uiautomator.(Pyunit use the specific version of uiautomator. So need to remove official one.)
+    $sudo pip uninstall uiautomator
+4. Install Pyunit. http://otcqa.sh.intel.com/wiki/Automation_test_suites_for_system_functional_validation
+
+Run pyunit case:
+1. CMD: python ACS.py -b <bench config xml> -d <device type> -c <Campaign xml file> [-s <device serial>] [--awr_server <report server>] [-u <user mail>]
+    Example 1. $python acs/src/ACS.py -b OTC/BENCHCFG/myBench_usb.xml -d ECS-Android-LLP -c OTC/CAMPAIGN/SystemFunctional/LOLLIPOP/MR_1/PRC/Multimedia_Audio_pretest.xml
+    Example 2. $python acs/src/ACS.py -d ECS-Android-LLP -c Multimedia_Camera.xml --user=shuang.wan@intel.com --awr_server=acs.tl.intel.com
+    
+    a. Benchconfig: 
+        #acs/src/_ExecutionConfig/OTC/BENCHCFG/myBench_usb.xml
+        #Use relative path: "-b OTC/BENCHCFG/myBench_usb.xml"
+    b. Device type: 
+        $python acs/src/ACS.py --device_models
+        #On IRDA/GMIN PLS use "-d ECS-Android-LLP"
+    a. Campaign xml:
+        #Under acs/src/_ExcutionConfig/OTC/CAMPAIGN/SystemFunctional/LOLLIPOP/MR_1/PRC/
+        #Use relative path: "-c OTC/CAMPAIGN/SystemFunctional/LOLLIPOP/MR_1/PRC/Multimedia_Audio_pretest.xml"
+    
+Get results:
+1. Local reports:
+    <current folder>/_Reports/
+    2015-06-26_15h43.23.1_ECS_Multimedia_Audio_pretest.html  --> Web report server location
+    2015-06-26_15h43.23.1_ECS_Multimedia_Audio_pretest --> Result data
+    
+2. Web portal: https://acs.tl.intel.com/AWR/
+3. live report:https://acs.tl.intel.com/ACSLiveReporting/
+
+
+ACS + Pyunit Developer
+
+One time host setup
+1. Proxy
+    a. /etc/environment
+        $vim /etc/environment --> add http_proxy/https_proxy/ftp_proxy ...
+        $vim /etc/sudors --> add env_keep+="http_proxy https_proxy ftp_proxy"
+    b. /etc/apt/apt.conf --> Update
+    c. Edit sources.list
+        #Invalid the http://jenkins-sys.sh.intel.com/releases/latest/Ubuntu1404 
+        $sudo apt-get update
+2. SSH configuration. https://intelpedia.intel.com/ACH_Gerrit/client_setup
+    a. install ssh
+        $sudo apt-get install openssh-client
+        $sudo apt-get install openssh-server
+    b. Create ssh key
+        $ssh-keygen
+        #Press enter to apply default settings.
+        #Default public key: ~/.ssh/id_rsa.pub 
+    c. Add this case to gerrit server.
+        #log in to https://android.intel.com/
+        #enter settings --> SSH Public Keys --> Add Key
+        $cat ~/.ssh/id_rsa.pub --> copy to gerrit --> add
+    d. Set up ssh config
+        $vim ~/.ssh/config
+        ```
+            StrictHostKeyChecking no  # Auto add to known_hosts 
+            host otc-android.intel.com
+                 port 29418
+                 user bozhoux
+
+            host android.intel.com
+                 port 29418
+                 user bozhoux
+
+            host android-mirror-sh.devtools.intel.com
+                 port 29418
+                 user bozhoux
+
+            host git-ccr-1.devtools.intel.com
+                 port 29418
+                 user bozhoux
+
+            host android-mirror-or.devtools.intel.com
+                 port 29418
+                 user bozhoux
+
+            host ncsgit002.nc.intel.com
+                 port 29418
+                 user bozhoux
+
+        ```
+        $sudo chmod 600 ~/.ssh/config
+
+2. Git and Jerrit configuration. https://intelpedia.intel.com/Git_IT/TeamForge
+    a. install git
+        $sudo apt-get install git
+    b. Log in to TeamxForge and make sure "OTC QA" in your project.
+        #https://tf-amr-1.devtools.intel.com/ --> Projects --> All Projects
+    c. Setup ssh keys.
+        #Enter https://tf-amr-1.devtools.intel.com/ --> Gitlogin SSH keys
+        $cat ~/.ssh/id_rsa.pub --> copy to TeamForge
+    d. Setup user.mail & user.name
+        $ git config --global user.name "bozhoux" 
+        $ git config --global user.email "box.a.zhou@intel.com" 
+    e. Set up mirros.
+        $vim ~/.gitconfig
+        #add below infos
+        [url "ssh://bozhoux@android-mirror-sh.devtools.intel.com:29418/"]
+            insteadOf=git://android.intel.com/
+            insteadOf=ssh://android.intel.com/
+            insteadOf=ssh://android.intel.com:29418/
+            insteadOf=git://<local mirror server name>/
+            insteadOf=ssh://<local mirror server name>/
+            insteadOf=git://android-mirror.devtools.intel.com/
+            insteadOf=ssh://android-mirror.devtools.intel.com/
+            insteadOf=ssh://android-mirror.devtools.intel.com:29418/
+            insteadOf=git://jfumg-gcrmirror.jf.intel.com/
+            insteadOf=ssh://jfumg-gcrmirror.jf.intel.com/
+            insteadOf=ssh://jfumg-gcrmirror.jf.intel.com:29418/
+        [url "ssh://bozhoux@android.intel.com:29418/"]
+            pushInsteadOf=ssh://android.intel.com/
+            pushInsteadOf=ssh://android.intel.com:29418/
+            pushInsteadOf=ssh://jfumg-gcrmirror.jf.intel.com/
+            pushInsteadOf=ssh://jfumg-gcrmirror.jf.intel.com:29418/
+            pushInsteadOf=ssh://android-mirror.devtools.intel.com/
+            pushInsteadOf=ssh://android-mirror.devtools.intel.com:29418/
+            pushInsteadOf=ssh://<local mirror server name>/
+            pushInsteadOf=ssh://<local mirror server name>:29418/
+
+    f. Check git function:
+        $ssh -p 29418 git-amr-1.devtools.intel.com
+3. Install Intel CA-Certificates.
+    $sudo mkdir /usr/share/ca-certificates/intel
+    $sudo wget http://certificates.intel.com/repository/certificates/Intel%20Root%20Certificate%20Chain%20Base64.zip -O /usr/share/ca-certificates/intel/IntelChain.zip
+    $cd /usr/share/ca-certificates/intel/;sudo unzip IntelChain.zip
+    $cd /usr/share/ca-certificates/intel/
+    $sudo unzip IntelChain.zip
+    $sudo find -name "* *" -type f | sudo rename 's/ /_/g'
+    $sudo update-ca-certificates
+    # If it does not work with previous line, try "$sudo dpkg-reconfigure ca-certificates"
+4. repo installation.
+    $mkdir -p ~/bin
+    $curl --noproxy android.intel.com https://android.intel.com/static/repo > ~/bin/repo
+    $sudo chmod a+x ~/bin/repo
+    $repo help
+    #Add repo to path
+    $sudo vim ~/.bashrc
+    $add export PATH=$PATH:~/bin/
+5. Install SDK:
+    a. Download SDK and unzip
+        
+    b. Replace adb/fastboot
+        $sudo cp -f <sdk root>/platform-tools/adb /usr/bin/adb
+        $sudo cp -f <sdk root>/platform-tools/fastboot /usr/bin/fastboot
+    c. Add to PATH:
+        $sudo vim /etc/profile
+        ``` export ANDROID_HOME=/usr/local/sdk
+            export PATH=$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools
+        ```
+    d. Add 51 rules to /etc/udev/rules.d
+        $cp 51-android.rules /etc/udev/rules.d/
+    e. Add super user for adb
+        $sudo chmod a+s /usr/bin/adb
+
+Install ACS:
+1. ACS Developer access
+    http://eam.intel.com --> Enterprise Applications --> DevTools --> ACS BUNDLE --> Software Developer
+2. Get ACS code.
+    $mkdir ~/acs_main
+    $cd ~/acs_main/
+    $repo init -u ssh://android.intel.com/manifest -b platform/android/main -m acs-main
+    $repo sync -j8
+3. Install ACS environment.(Setup for only once.)
+    $cd acs/src/_Tools/setup_manager/setups
+    $sudo python setup_mgr.py install devel
+Install Pyunit Dependence
+1. Install igas/uiautomator
+        $wget http://jenkins-sys.sh.intel.com/releases/latest/Ubuntu1404/amd64/igas-engine-15.12.1-amd64.deb
+        $sudo dpkg -i igas-engine-15.12.1-amd64.deb
+        $wget http://jenkins-sys.sh.intel.com/releases/latest/Ubuntu1404/amd64/uiautomator-15.12.3-amd64.deb
+        $sudo dpkg -i uiautomator-15.12.3-amd64.deb
+2. Install  python models.
+        $sudo -E pip install nose numpy scipy pypng pyqrcode requests paramiko fileDownloader pillow
+3. Update pyserial/requests
+        $sudo -E pip install --upgrade pyserial requests
+4. Install 32libs
+        $sudo -E apt-get install lib32z1 lib32ncurses5 lib32bz2-1.0 libstdc++6:i386
+5. Install other required pkgs.
+        $sudo -E apt-get install libimage-exiftool-perl python-opencv python-qrtools
+
+    
+    
+Run Case:
+1. cd to <acs_root>
+    e.g. cd ~/acs_main/
+2. Export ACS_EXECUTION_CONFIG_PATH value:
+    $export ACS_EXECUTION_CONFIG_PATH=<acs_root>/acs_test_suites/
+    e.g.  export ACS_EXECUTION_CONFIG_PATH=/home/bob/acs_test_suites
+3. Run campaign.
+    $python ACS.py -b <bench config xml> -d <device type> -c <Campaign xml file> [-s <device serial>] [--awr_server <report server>] [-u <user mail>]
+    e.g. $python acs/src/ACS.py -b OTC/BENCHCFG/myBench_usb.xml -d ECS-Android-LLP -c OTC/CAMPAIGN/SystemFunctional/LOLLIPOP/MR_1/PRC/Multimedia_Camera_pretest.xml
+
+Developer cases:
+1. Add new branch
+    $repo start <NEW_BRANCH> --all
+2. Edit and commit:
+    #edit your file
+    $git add
+    $git commit -am "<message>"
+    $repo upload
+3. Create your TC xml
+4. Create your campaign xml.
+5. Runtest.
+    
+Othres：
+1. ACS help：
+    $ python acs/src/ACS.py --help
+2. ACS Official Documents: http://acs.tl.intel.com:8080/acs-bundle-documentation/acs_developer_doc/ 
+3. Pyunit Wiki: http://otcqa.sh.intel.com/wiki/Automation_test_suites_for_system_functional_validation 
