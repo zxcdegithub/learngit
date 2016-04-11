@@ -32,7 +32,14 @@ Release Test
 	c. Start weekly release test
 		*All step executed complete
 		*No critical issues occurred
+
+script$ python QAReporter.py --help
+QAReporter.py  -i <inputfile> -o <outputfile> 
+用utils/otc_qainstrumentation/script/QAReporter.py 
+可以生成CSV
+
 		*Report
+
 
 2. Confirm and send release pkg to release team
 	*Upload build pkg to android-desktop
