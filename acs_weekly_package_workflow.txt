@@ -5,7 +5,7 @@
 
 1.5Get Testplans
  a. cd $code_base/acs_test_suites/OTC/TC/TP/support/plangenerator
- b. python campaigngen_hpalm.py --project OTC_Android_Testing --domain SSG --user xuchaozx --password 1qaz#EDC -d /home/chuxiongwei/local/code/acs_weekly_release/testplan/ww13 --filterfile hpalm_M.ini
+ b. python campaigngen_hpalm.py --project OTC_Android_Testing --domain SSG --user xuchaozx --password 1qaz#EDC -d ~/local/code/acs_weekly_release/testplan/ww13 --filterfile hpalm_M.ini
  c. cp CAMPAIGN to cp -ar * ~/local/code/acs_weekly_release/release/ww13/acs_test_suites/OTC/CAMPAIGN/SystemFunctional/M/MR_0/TP
  d. cp  TC to cp -ar * ~/local/code/acs_weekly_release/release/ww13/acs_test_suites/OTC/TC/TP/TC/
 
@@ -18,7 +18,7 @@
   ./acs_test_suites/OTC/CAMPAIGN/SystemFunctional/M/MR_0/TP/
 
 3.5 set export
-export ACS_EXECUTION_CONFIG_PATH=~/acs0114/acs_test_suites/
+export ACS_EXECUTION_CONFIG_PATH=~/local/code/acs_weekly_release/release/ww13/acs_test_suites/
 
 (Camera!!--3.8 for porting ,edit config file:tests.testplan.camera.conf
    path:./acs_test_suites/OTC/TC/TP/testplan/Multimedia_Camera/tests.testplan.camera.conf
