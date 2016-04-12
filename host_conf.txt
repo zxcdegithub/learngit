@@ -15,6 +15,13 @@ or discuss with me directly.
 3.$sudo vim /etc/sudoers, add below
   Defaults  env_keep += "http_proxy https_proxy no_proxy"
   Use : w !sudo tee % to save
+
+3.5 Visit http://otcqa.sh.intel.com/wiki/Automation_test_suites_for_system_functional_validation#Environment_configuration
+    a. wget http://jenkins-sys.sh.intel.com/tools/archive/oat_deploy_deps.sh
+    b. chmod +x oat_deploy_deps.sh
+    c. sudo ./oat_deploy_deps.sh
+
+
 4.$java ¨Cversion, to check if java version >=1.7, if <1.7 or not installed, please install the >=1.7 version jdk, such as $sudo apt-get install openjdk-7-jdk
 5.$sudo apt-get install bison g++-multilib git gperf libxml2-utils ccache lib32z1 lib32ncurses5 lib32bz2-1.0 dos2unix
 6. $cat ~/.ssh/id_rsa.pub, copy it to https://android.intel.com/#/q/status:open,n,z ?Sign In(Use windows log in account to sign in)?Settings(as below)?SSH Public Keys?Add Key¡­
