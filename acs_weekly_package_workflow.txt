@@ -4,20 +4,17 @@
  repo start PRC_branch --all
 
 1.5Get Testplans
- a. cd $code_base/acs_test_suites/OTC/TC/TP/support/plangenerator
+ a. cd ~/local/code/acs_weekly_release/release/ww13/acs_test_suites/OTC/TC/TP/support/plangenerator
  b. python campaigngen_hpalm.py --project OTC_Android_Testing --domain SSG --user xuchaozx --password 1qaz#EDC -d ~/local/code/acs_weekly_release/testplan/ww13 --filterfile hpalm_M.ini
- c. cp CAMPAIGN to cp -ar * ~/local/code/acs_weekly_release/release/ww13/acs_test_suites/OTC/CAMPAIGN/SystemFunctional/M/MR_0/TP
- d. cp  TC to cp -ar * ~/local/code/acs_weekly_release/release/ww13/acs_test_suites/OTC/TC/TP/TC/
+ c. cp CAMPAIGN to cp -ar ~/local/code/acs_weekly_release/testplan/ww13/CAMPAIGN/* ~/local/code/acs_weekly_release/release/ww13/acs_test_suites/OTC/CAMPAIGN/SystemFunctional/M/MR_0/TP
+ d. cp  TC to cp -ar ~/local/code/acs_weekly_release/testplan/ww13/TC/* ~/local/code/acs_weekly_release/release/ww13/acs_test_suites/OTC/TC/TP/TC/
 
 2.code path:
   ./acs_test_suites/OTC/TC/TP/
 
-2.5 Flash IMAGE
+2.5 Flash IMAG
 
-3. test xml path:
-  ./acs_test_suites/OTC/CAMPAIGN/SystemFunctional/M/MR_0/TP/
-
-3.5 set export
+3. set export
 export ACS_EXECUTION_CONFIG_PATH=~/local/code/acs_weekly_release/release/ww13/acs_test_suites/
 
 (Camera!!--3.8 for porting ,edit config file:tests.testplan.camera.conf
@@ -30,5 +27,6 @@ export ACS_EXECUTION_CONFIG_PATH=~/local/code/acs_weekly_release/release/ww13/ac
 3.8 kill adb server by cmd and adb devices.
 
 4. run xml file:
-  
-  python acs/src/ACS.py -b OTC/BENCHCFG/myBench_usb.xml -d ECS-Android-LLP -c OTC/CAMPAIGN/SystemFunctional/M/MR_0/TP/Multimedia_Camera.ECS_re.xml --dev --user=xuchaox.zhuang@intel.com --awr_server=acs.tl.intel.com
+  a. cd ~/local/code/acs_weekly_release/release/ww13/acs_test_suites/
+  b. ls OTC/CAMPAIGN/SystemFunctional/M/MR_0/TP | grep "Multi.*SOFIALTE.*"  
+  c. python acs/src/ACS.py -b OTC/BENCHCFG/myBench_usb.xml -d ECS-Android-LLP -c OTC/CAMPAIGN/SystemFunctional/M/MR_0/TP/Multimedia_Camera.ECS_re.xml --dev --user=xuchaox.zhuang@intel.com --awr_server=acs.tl.intel.com
