@@ -1,0 +1,1 @@
+repo init -u ssh://android.intel.com/manifests -b android/master -m r1
