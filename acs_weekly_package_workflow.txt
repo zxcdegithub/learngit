@@ -28,5 +28,5 @@ export ACS_EXECUTION_CONFIG_PATH=~/local/code/acs_weekly_release/release/ww13/ac
 
 4. run xml file:
   a. cd ~/local/code/acs_weekly_release/release/ww13/
-  b. ls OTC/CAMPAIGN/SystemFunctional/M/MR_0/TP | grep "Multi.*SOFIALTE.*"  
+  b. ls acs_test_suites/OTC/CAMPAIGN/SystemFunctional/M/MR_0/TP | grep "Multi.*SOFIALTE.*"  
   c. python acs/src/ACS.py -b OTC/BENCHCFG/myBench_usb.xml -d ECS-Android-LLP -c OTC/CAMPAIGN/SystemFunctional/M/MR_0/TP/Multimedia_Camera.ECS_re.xml --dev --user=xuchaox.zhuang@intel.com --awr_server=acs.tl.intel.com
