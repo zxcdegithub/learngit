@@ -4,7 +4,7 @@
  repo start PRC_branch --all
 
 1.5Get Testplans
- a. cd ~/local/code/acs_weekly_release/release/ww13/acs_test_suites/OTC/TC/TP/support/plangenerator
+ a. cd acs_test_suites/OTC/TC/TP/support/plangenerator
  b. python campaigngen_hpalm.py --project OTC_Android_Testing --domain SSG --user xuchaozx --password 1qaz#EDC -d ~/local/code/acs_weekly_release/testplan/ww13 --filterfile hpalm_M.ini
  c. cp CAMPAIGN to cp -ar ~/local/code/acs_weekly_release/testplan/ww13/CAMPAIGN/* ~/local/code/acs_weekly_release/release/ww13/acs_test_suites/OTC/CAMPAIGN/SystemFunctional/M/MR_0/TP
  d. cp  TC to cp -ar ~/local/code/acs_weekly_release/testplan/ww13/TC/* ~/local/code/acs_weekly_release/release/ww13/acs_test_suites/OTC/TC/TP/TC/
