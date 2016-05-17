@@ -1,0 +1,2 @@
+1. export TEST_DATA_ROOT=/home/john/local/code/acs_weekly_release/release/ww17_4/acs_test_suites/OTC/TC/TP/testplan/
+2. nosetests -s /home/john/local/code/acs_weekly_release/release/ww17_4/acs_test_suites/OTC/TC/TP/tests/Multimedia_Audio/Encode/audio_encode.py:AudioEncodeTest.testAudio_demo
